@@ -1,9 +1,7 @@
-export type TServerErrorResponse = {
-	detail:
-		| {
-				message: string;
-				status_code?: number;
-				success: boolean;
-		  }
-		| string;
-};
+export type TServerErrorResponse =
+  | {
+      message: string;
+      status_code?: number;
+      success: boolean;
+    }
+  | string;

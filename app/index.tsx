@@ -1,6 +1,13 @@
 import { Redirect } from "expo-router";
+import { useSession } from "@/src/context";
 
-const Index = () => {
-	return <Redirect href="/login" />;
+const MainIndex = () => {
+  const { isLoading } = useSession();
+
+  if (isLoading) {
+    return <></>;
+  }
+
+  return <Redirect href="/login" />;
 };
-export default Index;
+export default MainIndex;

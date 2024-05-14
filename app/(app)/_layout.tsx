@@ -1,53 +1,24 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Stack } from "expo-router";
+import { ROUTES } from "@/src/constants";
+import { useSession } from "@/src/context";
+import { Spinner } from "@gluestack-ui/themed";
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-import {TabBarIcon} from "@/app/components";
+export const unstable_settings = {
+  initialRouteName: ROUTES.LOGIN,
+};
 
+export default function AppLayout() {
+  const { isLoading } = useSession();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: 'Home screen',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
+    <Stack>
+      <Stack.Screen name={ROUTES.LOGIN} options={{ headerShown: false }} />
+      <Stack.Screen name={ROUTES.SIGN_IN} options={{ headerShown: false }} />
+      <Stack.Screen name={ROUTES.MAIN} options={{ headerShown: false }} />
+    </Stack>
   );
 }

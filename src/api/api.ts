@@ -33,11 +33,11 @@ http.interceptors.response.use(
   (response) => response,
 
   (error: AxiosError<TServerErrorResponse>) => {
-    if (typeof error?.response?.data?.detail == "string") {
-      // toastService.error(error?.response?.data?.detail || 'Unknown error');
-    } else {
-      // toastService.error(error?.response?.data?.detail?.message || 'Unknown error');
-    }
+    // if (typeof error?.response?.data?.detail == "string") {
+    // toastService.error(error?.response?.data?.detail || 'Unknown error');
+    // } else {
+    // toastService.error(error?.response?.data?.detail?.message || 'Unknown error');
+    // }
 
     if (error.response?.status === HttpStatusCode.Unauthorized) {
       // Storage.clearUserSession();

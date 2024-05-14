@@ -1,18 +1,31 @@
-import { Text, View } from '@/components/Themed';
-import {useSession} from "@/src/context";
+import { StyleSheet } from "react-native";
+import { View } from "@/src/components/Themed";
+import { Text } from "@gluestack-ui/themed";
 
-export const Home = () => {
-	const {signOut} = useSession();
+export const Profile = () => (
+  <View style={styles.container}>
+    <Text style={styles.title}>Profile Screen</Text>
+    <View
+      style={styles.separator}
+      lightColor="#eee"
+      darkColor="rgba(255,255,255,0.1)"
+    />
+  </View>
+);
 
-	return (
-		<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-			<Text
-				onPress={() => {
-					// The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
-					signOut();
-				}}>
-				Sign Out
-			</Text>
-		</View>
-	)
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: "80%",
+  },
+});

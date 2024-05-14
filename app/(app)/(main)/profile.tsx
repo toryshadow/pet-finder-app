@@ -1,7 +1,5 @@
-import Profile from "@/src/screens/Profile/Profile";
+import { Profile } from "@/src/screens";
 
 export default function ProfileScreen() {
-  return (
-    <Profile/>
-  );
+  return <Profile />;
 }

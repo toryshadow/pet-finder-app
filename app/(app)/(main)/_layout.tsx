@@ -1,18 +1,15 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {Link, Tabs, useNavigation} from 'expo-router';
-import { Pressable, Text } from 'react-native';
+import React from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Link, Tabs } from "expo-router";
+import { Pressable, useColorScheme } from "react-native";
+import { Text } from "@gluestack-ui/themed";
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-import {TabBarIcon} from "@/src/components";
+import { TabBarIcon } from "@/src/components";
 
-
-import { Redirect } from 'expo-router';
-import {useSession} from "@/src/context";
-import {ROUTES} from "@/src/constants";
-
+import { Redirect } from "expo-router";
+import { useSession } from "@/src/context";
+import { ROUTES, ThemeColors } from "@/src/constants";
+import { useClientOnlyValue } from "@/src/hooks/useClientOnlyValue";
 
 export default function TabsLayout() {
   const { session, isLoading } = useSession();
@@ -29,15 +26,16 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: ThemeColors[colorScheme ?? "light"].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name={ROUTES.HOME}
         options={{
-          title: 'Home screen',
+          title: "Registration screen",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -46,7 +44,7 @@ export default function TabsLayout() {
                   <FontAwesome
                     name="info-circle"
                     size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
+                    color={ThemeColors[colorScheme ?? "light"].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -58,11 +56,10 @@ export default function TabsLayout() {
       <Tabs.Screen
         name={ROUTES.PROFILE}
         options={{
-          title: 'Profile',
+          title: "Profile",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
     </Tabs>
   );
 }
-
