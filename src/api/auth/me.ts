@@ -5,7 +5,7 @@ import { AxiosResponse } from "axios";
 
 export const USER_KEY = "user-key";
 
-export const meRequest = async () => {
+export const meRequest = async (): Promise<TUser> => {
   try {
     const response = await http.get<AxiosResponse<TUser>>("auth/me");
 

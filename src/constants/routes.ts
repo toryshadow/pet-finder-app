@@ -6,4 +6,5 @@ export enum ROUTES {
   LOGIN = "login",
   HOME = "home",
   PROFILE = "profile",
+  EDIT_PROFILE = "edit-profile",
 }

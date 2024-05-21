@@ -10,6 +10,8 @@ import { Redirect } from "expo-router";
 import { useSession } from "@/src/context";
 import { ROUTES, ThemeColors } from "@/src/constants";
 import { useClientOnlyValue } from "@/src/hooks/useClientOnlyValue";
+import { meRequest } from "@/src/api";
+import { useQuery } from "react-query";
 
 export default function TabsLayout() {
   const { session, isLoading } = useSession();
@@ -27,16 +29,17 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: ThemeColors[colorScheme ?? "light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
       }}
     >
       <Tabs.Screen
         name={ROUTES.HOME}
         options={{
-          title: "Registration screen",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Dashboard",
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="dashboard" color={color} />
+          ),
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -57,7 +60,22 @@ export default function TabsLayout() {
         name={ROUTES.PROFILE}
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          headerRight: () => (
+            <Link href="/edit-profile" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="info-circle"
+                    size={25}
+                    color={ThemeColors[colorScheme ?? "light"].text}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
         }}
       />
     </Tabs>

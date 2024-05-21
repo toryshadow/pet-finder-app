@@ -1,14 +1,14 @@
-import { View } from "@/src/components/Themed";
 import { useSession } from "@/src/context";
-import { Button, ButtonText, Text, useToast } from "@gluestack-ui/themed";
-import { useForm, Controller } from "react-hook-form";
-import { Input, InputField } from "@gluestack-ui/themed";
+import { Text, useToast } from "@gluestack-ui/themed";
+import { useForm } from "react-hook-form";
+import { StyleSheet } from "react-native";
 import { loginRequest } from "@/src/api";
 import { TLogin } from "@/src/types";
 import { router } from "expo-router";
 import { useMutation } from "react-query";
 import { AxiosError } from "axios";
-import { ErrorToast } from "@/src/components";
+import { ErrorToast, FormInput, Button } from "@/src/components";
+import { Colors } from "@/src/constants";
 
 export const Login = () => {
   const { signIn } = useSession();
@@ -21,7 +21,7 @@ export const Login = () => {
   } = useForm({
     defaultValues: {
       email: "test1@example.com",
-      password: "secret",
+      password: "string",
     },
   });
 
@@ -45,76 +45,56 @@ export const Login = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        padding: 15,
-      }}
-    >
-      <View
-        style={{
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          padding: 15,
-        }}
+    <>
+      <FormInput
+        control={control}
+        name={"email"}
+        title="Email"
+        keyboardType="email-address"
+        placeholder={"example@gmail.com"}
+        textContentType={"emailAddress"}
+      />
+      <FormInput
+        control={control}
+        name={"password"}
+        title="Password"
+        placeholder={"Enter password"}
+        textContentType={"password"}
+        // secureTextEntry
+        onSubmit={handleSubmit(onSubmit)}
+      />
+      <Button onPress={handleSubmit(onSubmit)} style={styles.loginButton}>
+        <Text style={styles.loginButtonText}>Login</Text>
+      </Button>
+      <Button
+        style={styles.forgotButton}
+        onPress={() => router.navigate("sign-in")}
       >
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input variant="outline" size="md">
-              <InputField
-                autoCapitalize="none"
-                placeholder="Email"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            </Input>
-          )}
-          name="email"
-        />
-        {errors.email && <Text>This is required.</Text>}
-
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input variant="outline" size="md" style={{ marginTop: 15 }}>
-              <InputField
-                autoCapitalize="none"
-                placeholder="Password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            </Input>
-          )}
-          name="password"
-        />
-        <Button
-          size="md"
-          variant="solid"
-          action="primary"
-          onPress={handleSubmit(onSubmit)}
-          style={{ marginTop: 15 }}
-        >
-          <ButtonText style={{ width: "100%", textAlign: "center" }}>
-            LOGIN
-          </ButtonText>
-        </Button>
-      </View>
-      <View>
-        <Button size="md" variant="link" action="secondary">
-          <ButtonText>Register</ButtonText>
-        </Button>
-      </View>
-    </View>
+        <Text style={styles.forgotText}>Forgot password ?</Text>
+      </Button>
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  loginButton: {
+    backgroundColor: Colors.tint,
+    padding: 15,
+  },
+  loginButtonText: {
+    color: Colors.white,
+  },
+  forgotButton: {
+    width: "auto",
+    padding: 0,
+    alignSelf: "flex-end",
+    marginTop: 12,
+  },
+  forgotText: {
+    color: Colors.error,
+    fontFamily: "lato-bold",
+    fontSize: 16,
+    padding: 0,
+    margin: 0,
+  },
+});

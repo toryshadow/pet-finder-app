@@ -1,4 +1,10 @@
-import { useColorScheme, View as DefaultView } from "react-native";
+import {
+  TextProps,
+  useColorScheme,
+  Text as DefaultText,
+  View as DefaultView,
+} from "react-native";
+
 import { ThemeColors } from "@/src/constants";
 
 type ThemeProps = {
@@ -20,6 +26,18 @@ export function useThemeColor(
   } else {
     return ThemeColors[theme][colorName];
   }
+}
+
+export function Text(props: TextProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
+  return (
+    <DefaultText
+      style={[{ color, fontFamily: "lato" }, style]}
+      {...otherProps}
+    />
+  );
 }
 
 export function View(props: ViewProps) {
