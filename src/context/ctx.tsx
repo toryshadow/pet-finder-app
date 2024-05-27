@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { useStorageState } from "./useStorageState";
-import { setToken } from "@/src/api/api";
+import { removeToken, setToken } from "@/src/api/api";
 import { router } from "expo-router";
+import { useMutation } from "react-query";
+import { logoutRequest } from "@/src/api";
 
 const AuthContext = React.createContext<{
   signIn: (token: string) => void;
@@ -29,6 +31,7 @@ export function useSession() {
 
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
+  const { mutate: onLogoutRequest } = useMutation(["logout"], logoutRequest);
 
   useEffect(() => {
     if (isLoading) return;
@@ -36,6 +39,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
       setToken(session);
       router.replace("/home");
     } else {
+      removeToken();
+      onLogoutRequest();
       router.replace("/login");
     }
   }, [session, isLoading]);
@@ -44,7 +49,9 @@ export function SessionProvider(props: React.PropsWithChildren) {
     <AuthContext.Provider
       value={{
         signIn: (token: string) => setSession(token),
-        signOut: () => setSession(null),
+        signOut: () => {
+          setSession(null);
+        },
         session,
         isLoading,
       }}

@@ -1,13 +1,13 @@
 import { StyleSheet, TextInput, TextInputProps, ViewStyle } from "react-native";
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { useState } from "react";
-import EyeIcon from "../../../assets/images/svg/eye.svg";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as React from "react";
 import { Button } from "@/src/components/StyledButton";
 import { Colors } from "@/src/constants";
 import { Text, View } from "@/src/components";
 import { capitalize, formatPlaceholder } from "@/src/hepers";
+import { AntDesign } from "@expo/vector-icons";
 
 interface FormInputProps<TFieldValues extends FieldValues, TContext>
   extends TextInputProps {
@@ -83,10 +83,11 @@ export const FormInput = <TFieldValues extends FieldValues, TContext>({
         secureTextEntry={secureText}
       />
       {secureTextEntry && (
-        <EyeIcon
-          width={24}
-          height={24}
+        <AntDesign
+          name={secureText ? "eye" : "eyeo"}
+          size={24}
           style={style.hideIcon}
+          color="black"
           onPress={() => setSecureText(!secureText)}
         />
       )}
@@ -131,17 +132,15 @@ const style = StyleSheet.create({
     color: Colors.text,
     marginBottom: 4,
     fontSize: 14,
-    fontFamily: "lato",
     fontWeight: "300",
   },
   titleBold: {
-    fontFamily: "lato-bold",
     fontSize: 16,
     marginBottom: 8,
   },
   hideIcon: {
     position: "absolute",
-    top: 34,
+    top: 32,
     right: 10,
   },
   multiline: {

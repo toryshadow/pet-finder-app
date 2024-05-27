@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { useEffect, useState } from "react";
-import CalendarIcon from "../../../assets/images/svg/calendar.svg";
 import { format } from "date-fns";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { capitalize } from "@/src/hepers";
@@ -71,7 +70,6 @@ const FormDateTimePicker = <TFieldValues extends FieldValues, TContext>({
             autoCapitalize={"none"}
             editable={false}
           />
-          <CalendarIcon style={style.icon} />
         </View>
       </TouchableOpacity>
       <DateTimePicker
@@ -119,7 +117,6 @@ const style = StyleSheet.create({
     color: Colors.text,
     marginBottom: 4,
     fontSize: 14,
-    fontFamily: "lato",
     fontWeight: "300",
   },
   icon: {

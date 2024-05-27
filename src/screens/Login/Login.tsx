@@ -14,11 +14,7 @@ export const Login = () => {
   const { signIn } = useSession();
   const toast = useToast();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       email: "test1@example.com",
       password: "string",
@@ -60,7 +56,7 @@ export const Login = () => {
         title="Password"
         placeholder={"Enter password"}
         textContentType={"password"}
-        // secureTextEntry
+        secureTextEntry
         onSubmit={handleSubmit(onSubmit)}
       />
       <Button onPress={handleSubmit(onSubmit)} style={styles.loginButton}>
@@ -92,7 +88,6 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     color: Colors.error,
-    fontFamily: "lato-bold",
     fontSize: 16,
     padding: 0,
     margin: 0,

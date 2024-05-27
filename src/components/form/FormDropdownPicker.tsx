@@ -92,7 +92,6 @@ const style = StyleSheet.create({
     color: Colors.text,
     marginBottom: 4,
     fontSize: 14,
-    fontFamily: "lato",
     fontWeight: "300",
   },
 });

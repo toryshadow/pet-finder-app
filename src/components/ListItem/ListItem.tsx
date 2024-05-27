@@ -1,13 +1,16 @@
 import { Alert, StyleSheet, View, Text } from "react-native";
-import React, { useMemo } from "react";
+import React from "react";
 import { Button, Avatar } from "@/src/components";
-import { Colors } from "@/src/constants";
+import { Colors, ROUTES } from "@/src/constants";
+import { TPet } from "@/src/types/pet";
+import { router } from "expo-router";
 
-interface ListItemType<T> {
-  item: T;
+interface ListItemType {
+  item: TPet;
+  isEditable?: boolean;
 }
 
-const ListItem = <T extends {}>({ item }: ListItemType<T>) => {
+const ListItem = ({ item, isEditable }: ListItemType) => {
   // const [image, isImageLoading] = useFileDownload(item.Add_photo);
 
   const onDeleteItem = async () => {
@@ -34,13 +37,21 @@ const ListItem = <T extends {}>({ item }: ListItemType<T>) => {
         <Button style={styles.avatar} onPress={() => {}}>
           <Avatar isLoading={false} image={""} size={60} />
         </Button>
-        <Button style={styles.textContainer} onPress={() => {}}>
-          <Text style={styles.name}>{`item.First_Name item.Last_Name`}</Text>
+        <Button
+          style={styles.textContainer}
+          onPress={() => router.navigate(`${ROUTES.PET}/${item.id}`)}
+        >
+          <Text style={styles.name}>{item?.name}</Text>
           <Text style={styles.address} numberOfLines={1}>
-            {"address"}
+            {`Type: ${item.type?.name} Status: ${item.status}`}
           </Text>
         </Button>
       </View>
+      {!isEditable && (
+        <View style={styles.buttonContainer}>
+          <Text style={styles.name}>{item.name}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -85,14 +96,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     color: Colors.text,
-    fontFamily: "playfair-bold",
     marginBottom: 10,
   },
   address: {
     fontSize: 14,
     color: Colors.text,
     padding: 0,
-    fontFamily: "lato",
   },
   buttonIcon: {
     padding: 0,
@@ -103,7 +112,6 @@ const styles = StyleSheet.create({
   },
   missed: {
     fontSize: 16,
-    fontFamily: "lato-bold",
     color: Colors.text,
     padding: 0,
     marginRight: 5,

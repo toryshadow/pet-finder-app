@@ -24,3 +24,11 @@ export const loginRequest = async (payload: TLogin) => {
     throw error as AxiosError;
   }
 };
+
+export const logoutRequest = async () => {
+  try {
+    await http.post("auth/logout");
+  } catch (error) {
+    throw error as AxiosError;
+  }
+};

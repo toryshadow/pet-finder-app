@@ -1,52 +1,49 @@
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import {
   Alert,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
 } from "react-native";
-import * as React from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Text } from "@gluestack-ui/themed";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useSession } from "@/src/context";
 import { AppContainer } from "@/src/components/AppContainer";
-import { FormInput, Button, Avatar } from "@/src/components";
 import { Colors } from "@/src/constants";
+import { useEffect } from "react";
+import { Avatar, Button, FormInput } from "@/src/components";
 import { Loader } from "@/src/components/Loader";
+import * as React from "react";
 import { useFileUpload, usePickImage } from "@/src/hooks";
 import { useMutation, useQuery } from "react-query";
-import { meRequest, meUpdate, TFile, USER_KEY } from "@/src/api";
+import {
+  GET_PET_ID,
+  getPetById,
+  meRequest,
+  meUpdate,
+  TFile,
+  USER_KEY,
+} from "@/src/api";
+import { useForm } from "react-hook-form";
 import { TUser } from "@/src/types/user";
-import { useEffect } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { TPet } from "@/src/types/pet";
+import * as yup from "yup";
+
+type PetDetailsProps = { petId: number };
 
 const schema = yup
   .object({
-    email: yup
-      .string()
-      .email(
-        "This email format is incorrect. Please double-check and try again",
-      )
-      .required(),
-    firstName: yup.string(),
-    lastName: yup.string(),
+    name: yup.string(),
   })
   .required();
 
-const EditProfile = () => {
-  const { signOut } = useSession();
+export const PetDetails = ({ petId }: PetDetailsProps) => {
   const [image, pickImage] = usePickImage();
-  const { data: me, refetch } = useQuery([USER_KEY], () => meRequest());
-  const { control, handleSubmit } = useForm<
-    Pick<TUser, "firstName" | "lastName" | "email">
-  >({
-    // @ts-ignore
+  const { data: pet, refetch } = useQuery([GET_PET_ID, petId], () =>
+    getPetById(petId),
+  );
+  const { control, handleSubmit } = useForm<Partial<TPet>>({
     resolver: yupResolver(schema),
     defaultValues: {
-      firstName: me?.firstName,
-      lastName: me?.lastName,
-      email: me?.email,
+      name: pet?.name,
     },
   });
 
@@ -63,37 +60,16 @@ const EditProfile = () => {
     },
   );
 
-  const { onUploadFile, isLoading } = useFileUpload({
+  const { onUploadFile, isLoading, data } = useFileUpload({
     onSuccess: (res) => {
       updateUser({ photo: res.file as TFile });
     },
   });
-
-  const onSave = async (data: Partial<TUser>) => {
-    const { firstName, lastName, email } = data;
-    updateUser({
-      firstName,
-      lastName,
-    });
-  };
+  const onSave = async (data: Partial<TPet>) => {};
 
   useEffect(() => {
     onUploadFile(image);
   }, [image]);
-
-  const onLogout = () => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      {
-        text: "Yes",
-        onPress: () => signOut(),
-      },
-      {
-        text: "No",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-    ]);
-  };
 
   return (
     <KeyboardAvoidingView style={styles.keyboardContainer} behavior="position">
@@ -105,26 +81,13 @@ const EditProfile = () => {
             onPress={() => pickImage()}
             disabled={isLoading}
           >
-            <Avatar isLoading={false} image={me?.photo?.path} size={78} />
+            <Avatar isLoading={false} image={pet?.photo?.path} size={78} />
           </Button>
           <FormInput
             control={control}
-            name={"firstName"}
+            name={"name"}
             title="First name"
             placeholder={"Enter your first name"}
-          />
-          <FormInput
-            control={control}
-            name={"lastName"}
-            title="Last name"
-            placeholder={"Enter your last name"}
-          />
-          <FormInput
-            control={control}
-            name={"email"}
-            title="Email"
-            placeholder={"example@gmail.com"}
-            textContentType={"emailAddress"}
           />
 
           <Button
@@ -134,15 +97,6 @@ const EditProfile = () => {
             <Text style={styles.footerTextButtonText}>Save</Text>
           </Button>
 
-          <Button style={styles.footerLogoutButton} onPress={() => onLogout()}>
-            <Ionicons
-              name="exit-outline"
-              size={24}
-              color={Colors.error}
-              style={{ marginRight: 5 }}
-            />
-            <Text style={styles.footerLogoutButtonText}>Logout</Text>
-          </Button>
           <Loader isLoading={false} />
         </AppContainer>
       </ScrollView>
@@ -220,5 +174,3 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 });
-
-export default EditProfile;

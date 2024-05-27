@@ -51,3 +51,7 @@ http.interceptors.response.use(
 export const setToken = (token: string) => {
   http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
+
+export const removeToken = () => {
+  http.defaults.headers.common["Authorization"] = "";
+};

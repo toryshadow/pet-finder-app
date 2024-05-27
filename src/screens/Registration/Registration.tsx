@@ -1,17 +1,47 @@
 import { View } from "@/src/components/Themed";
 import { router } from "expo-router";
-import { Text } from "@gluestack-ui/themed";
+import { Text, useToast } from "@gluestack-ui/themed";
 import { StyleSheet } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import { Input, InputField } from "@gluestack-ui/themed";
-import { Button, FormInput } from "@/src/components";
+import { useForm } from "react-hook-form";
+import { Button, ErrorToast, FormInput } from "@/src/components";
 import AppContainer from "../../components/AppContainer/AppContainer";
 import { Colors } from "@/src/constants";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import * as React from "react";
+import { useMutation } from "react-query";
+import { registerRequest } from "@/src/api";
+import { AxiosError } from "axios";
+import { TRegister } from "@/src/types";
+import { Loader } from "@/src/components/Loader";
 
 export const Registration = () => {
-  // const { signIn } = useSession();
+  const toast = useToast();
+
+  const { mutate: register, isLoading } = useMutation(
+    ["register"],
+    registerRequest,
+    {
+      onSuccess: () => {
+        toast.show({
+          placement: "top",
+          render: () => (
+            <ErrorToast
+              type={"success"}
+              title="Success"
+              message={"You are successfully registered! Now you can login"}
+            />
+          ),
+        });
+        router.replace("/login");
+      },
+      onError: (error: AxiosError) => {
+        toast.show({
+          placement: "top",
+          render: () => <ErrorToast title="Error" message={error.message} />,
+        });
+      },
+    },
+  );
+
   const {
     control,
     handleSubmit,
@@ -25,10 +55,8 @@ export const Registration = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    // signIn();
-    router.replace("/home");
+  const onSubmit = (data: TRegister) => {
+    register(data);
   };
 
   return (
@@ -58,6 +86,7 @@ export const Registration = () => {
           control={control}
           name={"email"}
           title="Email"
+          autoCapitalize="none"
           placeholder={"Email"}
         />
         {errors.email && <Text>This is required.</Text>}
@@ -66,13 +95,16 @@ export const Registration = () => {
           control={control}
           name={"password"}
           title="Password"
+          autoCapitalize="none"
+          secureTextEntry
           placeholder={"Password"}
         />
-
+        {errors.password && <Text>This is required.</Text>}
         <Button onPress={handleSubmit(onSubmit)} style={styles.loginButton}>
           <Text style={styles.loginButtonText}>Register</Text>
         </Button>
       </View>
+      <Loader isLoading={isLoading} />
     </AppContainer>
   );
 };

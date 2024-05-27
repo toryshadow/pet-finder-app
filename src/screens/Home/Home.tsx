@@ -1,15 +1,26 @@
 import { View } from "@/src/components/Themed";
-import { EditIcon, Text } from "@gluestack-ui/themed";
-import { meRequest, USER_KEY } from "@/src/api";
+import { Text } from "@gluestack-ui/themed";
 import { useQuery } from "react-query";
 import { FlatList, StyleSheet } from "react-native";
 import { Button, Avatar } from "@/src/components";
 import { Colors } from "@/src/constants";
 import ListItem from "@/src/components/ListItem/ListItem";
 import { Loader } from "@/src/components/Loader";
-export const Home = () => {
-  const { data } = useQuery([USER_KEY], meRequest);
+import { GET_PET_KEY, getPets } from "@/src/api/pet";
+import { useState } from "react";
 
+export const Home = () => {
+  const [page] = useState(1);
+
+  const { data: pets, refetch } = useQuery([GET_PET_KEY, page], () =>
+    getPets({
+      page,
+      limit: 10,
+      isMyPets: false,
+    }),
+  );
+
+  console.log(pets);
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -26,19 +37,15 @@ export const Home = () => {
       <View style={[styles.container, { alignItems: "stretch" }]}>
         <FlatList
           style={styles.listContainer}
-          data={[
-            { id: 1, name: "name", address: "address" },
-            { id: 2, name: "name", address: "address" },
-          ]}
+          data={pets}
           renderItem={({ item }) => <ListItem item={item} key={item.id} />}
-          onRefresh={() => {}}
+          onRefresh={() => refetch()}
           refreshing={false}
-          // ListEmptyComponent={() => (
-          //   <View style={styles.innerContainer}>
-          //     <Inbox style={styles.icon} />
-          //     <Text style={styles.title}>{emptyTitle}</Text>
-          //   </View>
-          // )}
+          ListEmptyComponent={() => (
+            <View style={styles.innerContainer}>
+              <Text style={styles.title}>No data</Text>
+            </View>
+          )}
           onEndReached={() => {}}
           onEndReachedThreshold={0.5}
         />
@@ -68,7 +75,6 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.text,
-    fontFamily: "playfair-bold",
     fontSize: 24,
     textAlign: "center",
     marginRight: 16,

@@ -1,11 +1,13 @@
+import { TFile } from "@/src/api";
+
 export type TUser = {
-  email: "test1@example.com";
-  id: 3;
-  provider: "email";
+  email: string;
+  id: number;
+  provider: "email" | "google" | "facebook";
   socialId?: string | null;
   firstName: string | null;
   lastName: string | null;
-  photo?: string | null;
+  photo?: TFile | null;
   role?: TRole | null;
   status?: TStatus;
   createdAt: Date;

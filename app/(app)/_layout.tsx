@@ -35,7 +35,19 @@ export default function AppLayout() {
           title: "Registration",
         }}
       />
-      <Stack.Screen name={ROUTES.MAIN} options={{ headerShown: false }} />
+      <Stack.Screen
+        name={ROUTES.MAIN}
+        options={{ headerShown: false, headerBackTitle: "Back" }}
+      />
+      <Stack.Screen
+        name={ROUTES.PET}
+        options={{ headerShown: true, title: "PET" }}
+      />
+
+      <Stack.Screen
+        name={ROUTES.PET_DETAILS}
+        options={{ headerShown: true, title: "PET" }}
+      />
       <Stack.Screen
         name={ROUTES.EDIT_PROFILE}
         options={{ headerShown: true, title: "Edit profile" }}

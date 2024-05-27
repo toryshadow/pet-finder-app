@@ -2,30 +2,46 @@ import { FlatList, StyleSheet } from "react-native";
 import { View } from "@/src/components/Themed";
 import { EditIcon, Text } from "@gluestack-ui/themed";
 import { useQuery } from "react-query";
-import { meRequest } from "@/src/api";
+import { GET_MY_PET_KEY, meRequest, USER_KEY } from "@/src/api";
 import { Loader } from "@/src/components/Loader";
 import { AppContainer } from "@/src/components/AppContainer";
 import { Avatar, Button } from "@/src/components";
 import { Colors } from "@/src/constants";
 import ListItem from "@/src/components/ListItem/ListItem";
+import { useState } from "react";
+import { getPets } from "@/src/api/pet";
+import { router } from "expo-router";
 
 export const Profile = () => {
-  const me = useQuery(["me"], meRequest);
+  const me = useQuery([USER_KEY], meRequest);
+  const [page, setPage] = useState(1);
+
+  const { data: pets } = useQuery([GET_MY_PET_KEY, page], () =>
+    getPets({
+      page,
+      limit: 10,
+      isMyPets: true,
+    }),
+  );
 
   if (!me?.data) {
     return <Loader />;
   }
 
-  const keysToGet = ["email", "name", "firstName", "lastName", "phone"];
-
   return (
     <AppContainer style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.innerContainer}>
-          <Button style={styles.userButton} onPress={() => {}}>
-            <Avatar isLoading={false} image={""} size={78} />
+          <Button
+            style={styles.userButton}
+            onPress={() => router.navigate("/edit-profile")}
+          >
+            <Avatar isLoading={false} image={me.data.photo?.path} size={78} />
           </Button>
-          <Button style={styles.titleContainer} onPress={() => {}}>
+          <Button
+            style={styles.titleContainer}
+            onPress={() => router.navigate("/edit-profile")}
+          >
             <Text
               style={styles.title}
             >{`${me?.data.firstName} ${me?.data.lastName}`}</Text>
@@ -42,19 +58,15 @@ export const Profile = () => {
         <Text style={styles.title}>My pets</Text>
         <FlatList
           style={styles.listContainer}
-          data={[
-            { id: 1, name: "name", address: "address" },
-            { id: 2, name: "name", address: "address" },
-          ]}
+          data={pets || []}
           renderItem={({ item }) => <ListItem item={item} key={item.id} />}
           onRefresh={() => {}}
           refreshing={false}
-          // ListEmptyComponent={() => (
-          //   <View style={styles.innerContainer}>
-          //     <Inbox style={styles.icon} />
-          //     <Text style={styles.title}>{emptyTitle}</Text>
-          //   </View>
-          // )}
+          ListEmptyComponent={() => (
+            <View style={styles.innerContainer}>
+              <Text style={styles.title}>No data</Text>
+            </View>
+          )}
           onEndReached={() => {}}
           onEndReachedThreshold={0.5}
         />
@@ -98,7 +110,6 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.text,
-    fontFamily: "playfair-bold",
     fontSize: 24,
     textAlign: "center",
     marginRight: 16,

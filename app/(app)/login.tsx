@@ -2,7 +2,7 @@ import { Login } from "@/src/screens";
 import { AppContainer } from "@/src/components/AppContainer";
 import { Colors } from "@/src/constants";
 import { View, StyleSheet, Text, Image } from "react-native";
-import { ErrorToast, FormInput, Button } from "@/src/components";
+import { Button } from "@/src/components";
 import { Loader } from "@/src/components/Loader";
 import { router } from "expo-router";
 import Logo from "@/assets/images/logo.png";
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.text,
-    fontFamily: "playfair-bold",
     fontSize: 24,
     textAlign: "center",
     marginVertical: 32,
@@ -77,7 +76,6 @@ const styles = StyleSheet.create({
   },
   footerTextButtonText: {
     color: Colors.tint,
-    fontFamily: "lato-bold",
     fontSize: 16,
     padding: 0,
     margin: 0,
@@ -86,7 +84,6 @@ const styles = StyleSheet.create({
   },
   footerTextButtonTextDemo: {
     color: Colors.error,
-    fontFamily: "lato-bold",
     fontSize: 18,
   },
 
