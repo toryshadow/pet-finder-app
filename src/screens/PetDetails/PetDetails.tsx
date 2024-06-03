@@ -13,21 +13,14 @@ import { Loader } from "@/src/components/Loader";
 import * as React from "react";
 import { useFileUpload, usePickImage } from "@/src/hooks";
 import { useMutation, useQuery } from "react-query";
-import {
-  GET_PET_ID,
-  getPetById,
-  meRequest,
-  meUpdate,
-  TFile,
-  USER_KEY,
-} from "@/src/api";
+import { GET_PET_ID, getPetById, meUpdate, TFile } from "@/src/api";
 import { useForm } from "react-hook-form";
 import { TUser } from "@/src/types/user";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TPet } from "@/src/types/pet";
 import * as yup from "yup";
 
-type PetDetailsProps = { petId: number };
+type PetDetailsProps = { petId?: number };
 
 const schema = yup
   .object({
@@ -37,8 +30,10 @@ const schema = yup
 
 export const PetDetails = ({ petId }: PetDetailsProps) => {
   const [image, pickImage] = usePickImage();
-  const { data: pet, refetch } = useQuery([GET_PET_ID, petId], () =>
-    getPetById(petId),
+  const { data: pet, refetch } = useQuery(
+    [GET_PET_ID, petId],
+    () => getPetById(petId),
+    { enabled: !!petId },
   );
   const { control, handleSubmit } = useForm<Partial<TPet>>({
     resolver: yupResolver(schema),
@@ -75,7 +70,7 @@ export const PetDetails = ({ petId }: PetDetailsProps) => {
     <KeyboardAvoidingView style={styles.keyboardContainer} behavior="position">
       <ScrollView>
         <AppContainer style={styles.container}>
-          <Text style={styles.title}>Edit profile</Text>
+          <Text style={styles.title}>Edit pet</Text>
           <Button
             style={styles.avatar}
             onPress={() => pickImage()}

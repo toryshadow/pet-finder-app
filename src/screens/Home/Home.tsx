@@ -2,12 +2,13 @@ import { View } from "@/src/components/Themed";
 import { Text } from "@gluestack-ui/themed";
 import { useQuery } from "react-query";
 import { FlatList, StyleSheet } from "react-native";
-import { Button, Avatar } from "@/src/components";
+import { Button, Avatar, FormInput } from "@/src/components";
 import { Colors } from "@/src/constants";
 import ListItem from "@/src/components/ListItem/ListItem";
 import { Loader } from "@/src/components/Loader";
 import { GET_PET_KEY, getPets } from "@/src/api/pet";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export const Home = () => {
   const [page] = useState(1);
@@ -20,13 +21,23 @@ export const Home = () => {
     }),
   );
 
-  console.log(pets);
+  const { control } = useForm();
+
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <Button style={styles.userButton} onPress={() => {}}>
           <Avatar isLoading={false} image={""} size={78} />
         </Button>
+
+        <View style={styles.buttonsContainer}>
+          <FormInput
+            control={control}
+            name={"search"}
+            title="Find a pet"
+            placeholder="Red cat"
+          />
+        </View>
         <View style={styles.buttonsContainer}>
           <Button style={styles.mpnButton} onPress={() => {}}>
             <Text style={styles.loginButtonText}>Find</Text>
@@ -90,7 +101,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     width: "100%",
-    marginTop: 25,
+    marginTop: 5,
   },
   mpnButton: {
     backgroundColor: Colors.tint,

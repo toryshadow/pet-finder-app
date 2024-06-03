@@ -5,6 +5,7 @@ export enum ROUTES {
   SIGN_IN = "sign-in",
   LOGIN = "login",
   HOME = "home",
+  ADD_PET = "add-pet",
   PROFILE = "profile",
   EDIT_PROFILE = "edit-profile",
   PET = "pet",

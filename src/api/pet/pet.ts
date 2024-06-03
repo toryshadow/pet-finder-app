@@ -76,14 +76,16 @@ export const getPets = async ({
       `${baseUrl}?${requestQuery}`,
     );
 
-    console.log("baseUrl", baseUrl, response);
     return response.data?.data;
   } catch (error) {
     throw error as TServerErrorResponse;
   }
 };
 
-export const getPetById = async (id: number): Promise<TPet> => {
+export const getPetById = async (id?: number): Promise<TPet> => {
+  if (!id) {
+    throw new Error("Id is required");
+  }
   try {
     const response = await http.get<AxiosResponse<TPet>>(`pet/${id}`);
 

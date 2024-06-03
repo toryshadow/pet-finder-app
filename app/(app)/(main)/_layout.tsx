@@ -1,17 +1,15 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Pressable, useColorScheme } from "react-native";
+import { Pressable, useColorScheme, View } from "react-native";
 import { Text } from "@gluestack-ui/themed";
 
 import { TabBarIcon } from "@/src/components";
 
 import { Redirect } from "expo-router";
 import { useSession } from "@/src/context";
-import { ROUTES, ThemeColors } from "@/src/constants";
+import { Colors, ROUTES, ThemeColors } from "@/src/constants";
 import { useClientOnlyValue } from "@/src/hooks/useClientOnlyValue";
-import { meRequest } from "@/src/api";
-import { useQuery } from "react-query";
 
 export default function TabsLayout() {
   const { session, isLoading } = useSession();
@@ -37,9 +35,7 @@ export default function TabsLayout() {
         options={{
           title: "Dashboard",
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="dashboard" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="paw" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -53,6 +49,32 @@ export default function TabsLayout() {
                 )}
               </Pressable>
             </Link>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name={ROUTES.ADD_PET}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.push(ROUTES.MODAL);
+          },
+        })}
+        options={{
+          title: "Add",
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <View
+              style={{
+                backgroundColor: Colors.tint,
+                padding: 20,
+                borderRadius: 16,
+                marginTop: -16,
+              }}
+            >
+              <TabBarIcon name="plus" color={Colors.white} />
+            </View>
           ),
         }}
       />
